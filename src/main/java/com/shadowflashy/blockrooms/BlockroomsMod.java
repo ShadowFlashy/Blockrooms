@@ -9,12 +9,14 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -45,6 +47,10 @@ public final class BlockroomsMod {
             MobCategory.MONSTER,
             builder -> builder.sized(0.6F, 1.95F)
     );
+    public static final DeferredItem<Item> FACELING_SPAWN_EGG = ITEMS.registerItem(
+            "faceling_spawn_egg",
+            properties -> new DeferredSpawnEggItem(FACELING, 0xE1E0DC, 0x53524E, properties)
+    );
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> BLOCKROOMS_TAB = CREATIVE_MODE_TABS.register(
             "blockrooms",
@@ -52,7 +58,10 @@ public final class BlockroomsMod {
                     .title(Component.translatable("itemGroup.blockrooms"))
                     .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
                     .icon(() -> LIMINAL_TILES_ITEM.get().getDefaultInstance())
-                    .displayItems((parameters, output) -> output.accept(LIMINAL_TILES_ITEM.get()))
+                    .displayItems((parameters, output) -> {
+                        output.accept(LIMINAL_TILES_ITEM.get());
+                        output.accept(FACELING_SPAWN_EGG.get());
+                    })
                     .build()
     );
 
@@ -72,8 +81,11 @@ public final class BlockroomsMod {
     }
 
     private void onBuildCreativeTabs(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+        if (CreativeModeTabs.BUILDING_BLOCKS.equals(event.getTabKey())) {
             event.accept(LIMINAL_TILES_ITEM);
+        }
+        if (CreativeModeTabs.SPAWN_EGGS.equals(event.getTabKey())) {
+            event.accept(FACELING_SPAWN_EGG);
         }
     }
 
