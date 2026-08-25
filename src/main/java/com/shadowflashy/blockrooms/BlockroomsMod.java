@@ -72,7 +72,7 @@ public final class BlockroomsMod {
     }
 
     private void onBuildCreativeTabs(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+        if (CreativeModeTabs.BUILDING_BLOCKS.equals(event.getTabKey())) {
             event.accept(LIMINAL_TILES_ITEM);
         }
     }
